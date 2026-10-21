@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#F5F5F5"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<title>罐头的针织屋</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="mobile.css"/>
+</head>
+<body class="m">
+
+<!-- ========== 项目列表 ========== -->
+<section id="tab-project" class="tab active">
+  <header class="mHeader">
+    <div class="mBrand">
+      <svg class="mWhale" viewBox="0 0 40 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 16 Q4 8 14 8 L26 8 Q34 8 36 14 L36 18 Q36 20 32 20 L30 22 L28 20 L12 20 Q6 20 4 16 Z"/>
+        <circle cx="28" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+        <path d="M22 6 Q24 3 26 6" stroke-width="1.2"/>
+      </svg>
+      <span>罐头的针织屋</span>
+    </div>
+    <button class="mIconBtn" id="btnNewProj" aria-label="新建项目">＋</button>
+  </header>
+  <div class="mProjGrid" id="projGrid"></div>
+</section>
+
+<!-- ========== 设计 Tab ========== -->
+<section id="tab-design" class="tab">
+  <header class="mHeader">
+    <button class="mIconBtn" id="btnBackToProj" aria-label="返回">‹</button>
+    <div class="mTitle">
+      <div class="mProjName" id="mProjName">北欧雪花</div>
+      <div class="mProjSize" id="mProjSize">60 × 48</div>
+    </div>
+    <div class="mHeaderRight">
+      <button class="mViewToggle" data-mode="both">全部</button>
+      <button class="mViewToggle" data-mode="fabric">Fabric</button>
+      <button class="mViewToggle" data-mode="chart">Chart</button>
+    </div>
+  </header>
+
+  <div class="mFabricWrap" id="mFabricWrap"><canvas id="mFabricCv"></canvas></div>
+  <div class="mChartWrap" id="mChartWrap"><canvas id="mCv"></canvas></div>
+
+  <!-- SVG 图标工具栏（1.5px stroke outline） -->
+  <div class="mToolbar" id="mToolbar">
+    <button class="mTool active" data-tool="pen" aria-label="画笔">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </button>
+    <button class="mTool" data-tool="eraser" aria-label="橡皮">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H7L3 16c-1-1-1-3 0-4L13 2c1-1 3-1 4 0l5 5c1 1 1 3 0 4l-8 8"/><path d="M10 20l8-8"/></svg>
+    </button>
+    <button class="mTool" data-tool="fill" aria-label="填充">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 14-2 2L3 5z"/><path d="M3 21h18"/><path d="M17 18l2 2"/></svg>
+    </button>
+    <button class="mTool" data-tool="undo" aria-label="撤销">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-15-6.7L3 13"/></svg>
+    </button>
+    <button class="mTool" data-tool="redo" aria-label="重做">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0115-6.7L21 13"/></svg>
+    </button>
+    <button class="mTool" data-tool="mirror" aria-label="对称">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg>
+    </button>
+  </div>
+
+  <!-- 下方四个面板 Tab -->
+  <div class="mPanelTabs">
+    <button class="mPanelTab active" data-panel="yarns">纱线</button>
+    <button class="mPanelTab" data-panel="grid">尺寸</button>
+    <button class="mPanelTab" data-panel="palette">调色</button>
+    <button class="mPanelTab" data-panel="more">更多</button>
+  </div>
+
+  <div class="mPanelWrap">
+    <!-- 纱线面板 -->
+    <div class="mPanel active" id="panel-yarns">
+      <div class="mPanelHead">
+        <span>当前纱线 · <b id="yarnCount">0</b></span>
+        <button class="mIconBtn sm" id="btnAddYarn">＋</button>
+      </div>
+      <div class="mYarnList" id="mYarnList"><!-- filled by JS --></div>
+    </div>
+
+    <!-- 尺寸面板 -->
+    <div class="mPanel" id="panel-grid">
+      <div class="mPanelHead"><span>Grid</span></div>
+      <div class="mFormRow"><label>Stitches</label><div class="mStepper"><button data-setting="cols" data-delta="-1">−</button><span id="setCols">0</span><button data-setting="cols" data-delta="1">＋</button></div></div>
+      <div class="mFormRow"><label>Rows</label><div class="mStepper"><button data-setting="rows" data-delta="-1">−</button><span id="setRows">0</span><button data-setting="rows" data-delta="1">＋</button></div></div>
+      <div class="mFormRow"><label>Repeat W</label><div class="mStepper"><button data-setting="rpw" data-delta="-1">−</button><span id="setRpw">1</span><button data-setting="rpw" data-delta="1">＋</button></div></div>
+      <div class="mFormRow"><label>Repeat H</label><div class="mStepper"><button data-setting="rph" data-delta="-1">−</button><span id="setRph">1</span><button data-setting="rph" data-delta="1">＋</button></div></div>
+      <div class="mFormRow"><label>Knitting</label>
+        <select id="setKnit"><option value="flat">Flat (圈织)</option><option value="round">Round (片织)</option></select>
+      </div>
+      <div class="mPanelHead"><span>Gauge · 每 10cm</span></div>
+      <div class="mFormRow"><label>Stitches</label><div class="mStepper"><button data-setting="gsts" data-delta="-1">−</button><span id="setGsts">29</span><button data-setting="gsts" data-delta="1">＋</button></div></div>
+      <div class="mFormRow"><label>Rows</label><div class="mStepper"><button data-setting="grows" data-delta="-1">−</button><span id="setGrows">21</span><button data-setting="grows" data-delta="1">＋</button></div></div>
+    </div>
+
+    <!-- 调色面板 -->
+    <div class="mPanel" id="panel-palette">
+      <div class="mPanelHead"><span>Color Palette</span></div>
+      <div class="mPalGrid" id="mPalGrid"><!-- filled by JS --></div>
+      <button class="mBtnFull" id="btnAddColor">＋ 添加颜色 (hex)</button>
+    </div>
+
+    <!-- 更多面板 -->
+    <div class="mPanel" id="panel-more">
+      <button class="mBtnFull" id="btnExport">导出图表 (A4 Sheet)</button>
+      <button class="mBtnFull" id="btnExportFabric">导出 Fabric 大图</button>
+      <button class="mBtnFull" id="btnExportProj">导出工程 (.knitproj.json)</button>
+      <button class="mBtnFull" id="btnPrint">打印 / PDF</button>
+      <button class="mBtnFull" id="btnSave">保存到 IndexedDB</button>
+      <div class="mAbout">罐头的针织屋 v0.3<br/><small>原生 HTML · Canvas · IndexedDB · 复用电脑端导出引擎</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 照着织 Tab ========== -->
+<section id="tab-knit" class="tab">
+  <header class="mHeader">
+    <button class="mIconBtn" id="btnKnitBack" aria-label="返回">‹</button>
+    <div class="mTitle">
+      <div class="mProjName" id="mKnitProjName">北欧雪花</div>
+      <div class="mProjSize" id="mKnitRow">Row 27 / 48</div>
+    </div>
+    <div class="mHeaderRight">
+      <button class="mIconBtn" id="btnKnitFlip" aria-label="正反面">⇋</button>
+    </div>
+  </header>
+  <div class="mKnitRowHead" id="mKnitRowHead"></div>
+  <div class="mKnitRowCvWrap"><canvas id="mKnitRowCv"></canvas></div>
+  <div class="mKnitProg">
+    <div class="mKnitProgBar"><div class="mKnitProgFill" id="mProgFill"></div></div>
+    <div class="mKnitProgTxt" id="mProgTxt">15 / 48 行 · 31%</div>
+  </div>
+  <div class="mKnitBtns">
+    <button class="mBigBtn" id="btnPrevRow">◀ 上一行</button>
+    <button class="mBigBtn primary" id="btnNextRow">下一行 ▶</button>
+  </div>
+  <div class="mKnitMiniCvWrap"><canvas id="mKnitMiniCv"></canvas></div>
+</section>
+
+<!-- ========== 底部 Tab ========== -->
+<nav class="mTabBar">
+  <button class="mTab active" data-tab="project"><span class="mTabIcon">📁</span><span>项目</span></button>
+  <button class="mTab" data-tab="design"><span class="mTabIcon">🎨</span><span>设计</span></button>
+  <button class="mTab" data-tab="knit"><span class="mTabIcon">🧶</span><span>照着织</span></button>
+</nav>
+
+<!-- 12 个共享模块 -->
+<script src="js/i18n.js"></script>
+<script src="js/db.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/texture.js"></script>
+<script src="js/preview.js"></script>
+<script src="js/garment.js"></script>
+<script src="js/stitch.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/generators.js"></script>
+<script src="js/patterns.js"></script>
+<script src="js/yarns.js"></script>
+<script src="js/io.js"></script>
+
+<script src="mobile.js"></script>
+</body>
+</html>
